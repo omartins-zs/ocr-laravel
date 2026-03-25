@@ -1,0 +1,33 @@
+#!/bin/sh
+
+echo "---------------------------------------"
+echo "Iniciando hooks de pre-commit..."
+echo "---------------------------------------"
+
+echo "[1/2] Rodando Laravel Pint..."
+./vendor/bin/pint --test
+PINT_STATUS=$?
+
+if [ $PINT_STATUS -ne 0 ]; then
+    echo "[ERRO] Laravel Pint encontrou problemas de formatacao."
+    echo "Dica: rode './vendor/bin/pint' para corrigir automaticamente."
+    echo "Commit abortado."
+    exit 1
+fi
+
+echo "Pint OK."
+
+echo "[2/2] Rodando Larastan..."
+./vendor/bin/phpstan analyse --memory-limit=1G
+STAN_STATUS=$?
+
+if [ $STAN_STATUS -ne 0 ]; then
+    echo "[ERRO] Larastan encontrou falhas no codigo PHP."
+    echo "Commit abortado."
+    exit 1
+fi
+
+echo "Larastan OK."
+echo "Pronto para commit."
+
+exit 0
