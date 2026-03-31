@@ -1,11 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap');
 @import 'tailwindcss';
+@import 'filepond/dist/filepond.min.css';
+@import 'toastr/build/toastr.min.css';
+@import 'tippy.js/dist/tippy.css';
+@import 'tippy.js/themes/light-border.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+
+    --color-brand-50: #eff6ff;
+    --color-brand-100: #dbeafe;
+    --color-brand-200: #bfdbfe;
+    --color-brand-300: #93c5fd;
+    --color-brand-400: #60a5fa;
+    --color-brand-500: #3b82f6;
+    --color-brand-600: #2563eb;
+    --color-brand-700: #1d4ed8;
+    --color-brand-800: #1e40af;
+    --color-brand-900: #1e3a8a;
+    --color-brand-950: #172554;
+}
+
+@layer base {
+    body {
+        @apply bg-slate-100 text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-100;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-display);
+    }
+}
+
+@layer components {
+    .app-shell {
+        @apply min-h-screen bg-[radial-gradient(circle_at_0%_0%,rgba(37,99,235,0.14),transparent_40%),radial-gradient(circle_at_100%_0%,rgba(14,165,233,0.10),transparent_35%),linear-gradient(180deg,#f8fafc_0%,#f1f5f9_100%)] dark:bg-[radial-gradient(circle_at_0%_0%,rgba(37,99,235,0.22),transparent_40%),radial-gradient(circle_at_100%_0%,rgba(14,165,233,0.18),transparent_35%),linear-gradient(180deg,#020617_0%,#0f172a_100%)];
+    }
+
+    .card-surface {
+        @apply rounded-2xl border border-slate-200/80 bg-white/92 shadow-sm shadow-slate-200/60 backdrop-blur dark:border-slate-800 dark:bg-slate-900/84 dark:shadow-black/30;
+    }
+
+    .page-header {
+        @apply mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .page-title-wrap {
+        @apply space-y-1;
+    }
+
+    .page-title {
+        @apply flex items-center gap-2 text-2xl font-bold text-slate-900 dark:text-slate-100;
+    }
+
+    .page-subtitle {
+        @apply text-sm text-slate-500 dark:text-slate-400;
+    }
+
+    .filter-panel {
+        @apply mb-6 rounded-2xl border border-slate-200/80 bg-white/92 p-4 shadow-sm shadow-slate-200/60 backdrop-blur sm:p-5 dark:border-slate-800 dark:bg-slate-900/84 dark:shadow-black/30;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-700 to-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-brand-700/20 transition hover:from-brand-800 hover:to-brand-700 focus:ring-2 focus:ring-brand-300 focus:outline-none;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-800;
+    }
+
+    .btn-danger {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700;
+    }
+
+    .input-control {
+        @apply w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 shadow-sm transition focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:ring-brand-900/60;
+    }
+
+    .label-control {
+        @apply mb-1.5 block text-xs font-semibold tracking-wide text-slate-600 uppercase dark:text-slate-300;
+    }
+
+    .badge-status {
+        @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold;
+    }
+
+    .badge-status-success {
+        @apply bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300;
+    }
+
+    .badge-status-warning {
+        @apply bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300;
+    }
+
+    .badge-status-danger {
+        @apply bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300;
+    }
+
+    .badge-status-info {
+        @apply bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300;
+    }
+
+    .stat-card {
+        @apply rounded-2xl border border-slate-200/80 bg-white/92 p-4 shadow-sm shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900/84 dark:shadow-black/30;
+    }
+
+    .stat-label {
+        @apply text-[11px] font-semibold tracking-wider text-slate-500 uppercase dark:text-slate-400;
+    }
+
+    .stat-value {
+        @apply mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100;
+    }
+
+    .filepond--root {
+        @apply w-full max-w-full;
+    }
+
+    .table-enterprise thead tr {
+        @apply border-b border-slate-200 bg-slate-50/90 text-left text-xs font-semibold tracking-wide text-slate-500 uppercase dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-400;
+    }
+
+    .table-enterprise th {
+        @apply px-3 py-3;
+    }
+
+    .table-enterprise tbody tr {
+        @apply border-b border-slate-100 transition hover:bg-brand-50/45 dark:border-slate-800 dark:hover:bg-slate-800/45;
+    }
+
+    .table-enterprise td {
+        @apply px-3 py-3 align-middle;
+    }
+
+    .filepond--panel-root {
+        @apply rounded-xl border border-slate-300 bg-white dark:border-slate-700 dark:bg-slate-900;
+    }
+
+    .filepond--drop-label {
+        @apply px-4 py-6 text-sm text-slate-600 dark:text-slate-300;
+    }
+
+    .filepond--drop-label label {
+        @apply break-words text-center;
+    }
 }
