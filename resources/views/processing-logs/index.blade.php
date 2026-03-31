@@ -24,7 +24,7 @@
                     <x-heroicon-o-funnel class="h-3.5 w-3.5" />
                     Nivel
                 </label>
-                <select name="level" class="w-full">
+                <select name="level" class="select-control">
                     <option value="">Todos</option>
                     @foreach ($levels as $level)
                         <option value="{{ $level }}" @selected(($filters['level'] ?? null) === $level)>{{ strtoupper($level) }}</option>
@@ -36,7 +36,7 @@
                     <x-heroicon-o-adjustments-horizontal class="h-3.5 w-3.5" />
                     Etapa
                 </label>
-                <select name="stage" class="w-full">
+                <select name="stage" class="select-control">
                     <option value="">Todas</option>
                     @foreach ($stages as $stage)
                         <option value="{{ $stage }}" @selected(($filters['stage'] ?? null) === $stage)>{{ $stage }}</option>

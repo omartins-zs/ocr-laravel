@@ -38,7 +38,7 @@
                     </div>
                     <div>
                         <label class="label-control">Perfil</label>
-                        <select name="role" class="w-full">
+                        <select name="role" class="select-control">
                             <option value="">Todos</option>
                             @foreach ($roles as $role)
                                 <option value="{{ $role->value }}" @selected(($filters['role'] ?? null) === $role->value)>
@@ -49,7 +49,7 @@
                     </div>
                     <div>
                         <label class="label-control">Status</label>
-                        <select name="status" class="w-full">
+                        <select name="status" class="select-control">
                             <option value="">Todos</option>
                             <option value="active" @selected(($filters['status'] ?? null) === 'active')>Ativo</option>
                             <option value="inactive" @selected(($filters['status'] ?? null) === 'inactive')>Inativo</option>
@@ -163,7 +163,7 @@
 
                 <div>
                     <label class="label-control">Perfil</label>
-                    <select name="role" class="w-full" id="modal-user-role">
+                    <select name="role" class="select-control" id="modal-user-role">
                         @foreach ($roles as $role)
                             <option value="{{ $role->value }}">
                                 {{ $role->label() }}
@@ -174,7 +174,7 @@
 
                 <div>
                     <label class="label-control">Status</label>
-                    <select name="is_active" class="w-full" id="modal-user-active">
+                    <select name="is_active" class="select-control" id="modal-user-active">
                         <option value="1">Ativo</option>
                         <option value="0">Inativo</option>
                     </select>

@@ -44,7 +44,7 @@
             </div>
             <div>
                 <label class="label-control">Status</label>
-                <select name="status" class="w-full">
+                <select name="status" class="select-control">
                     <option value="">Todos</option>
                     @foreach ($statusOptions as $status)
                         <option value="{{ $status->value }}" @selected(($filters['status'] ?? null) === $status->value)>{{ $status->label() }}</option>
