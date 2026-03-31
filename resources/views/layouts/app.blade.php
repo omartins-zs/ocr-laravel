@@ -93,7 +93,7 @@
                                 data-ocr-status-badge
                                 data-ocr-status-url="{{ route('ocr.status') }}"
                                 data-ocr-status-poll-ms="{{ (int) config('ocr.status_poll_ms', 30000) }}"
-                                data-ocr-status-request-timeout-ms="{{ (int) config('ocr.status_request_timeout_ms', 5000) }}"
+                                data-ocr-status-request-timeout-ms="{{ (int) config('ocr.status_request_timeout_ms', 8000) }}"
                                 data-ocr-status-failure-threshold="{{ (int) config('ocr.status_failure_threshold', 2) }}"
                                 data-ocr-status-auto-poll="{{ request()->routeIs('upload') ? '0' : '1' }}"
                                 data-ocr-status-console-log="{{ config('app.debug') ? '1' : '0' }}"

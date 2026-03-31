@@ -149,6 +149,17 @@ const initializeThemeToggle = () => {
 };
 
 const OCR_BADGE_CLASS_GROUPS = {
+    checking: {
+        badge: [
+            'border-sky-200',
+            'bg-sky-50',
+            'text-sky-700',
+            'dark:border-sky-500/40',
+            'dark:bg-sky-500/10',
+            'dark:text-sky-300',
+        ],
+        dot: ['bg-sky-500'],
+    },
     online: {
         badge: [
             'border-emerald-200',
@@ -184,10 +195,63 @@ const OCR_BADGE_CLASS_GROUPS = {
     },
 };
 
-const OCR_BADGE_STATES = ['online', 'offline', 'disabled'];
+const OCR_BADGE_STATES = ['checking', 'online', 'offline', 'disabled'];
 
-const applyOcrBadgeState = (badge, state, details = {}) => {
-    const resolvedState = OCR_BADGE_STATES.includes(state) ? state : 'offline';
+const OCR_HEALTH_PANEL_CLASS_GROUPS = {
+    checking: ['bg-sky-100', 'text-sky-700', 'dark:bg-sky-500/20', 'dark:text-sky-300'],
+    online: ['bg-emerald-100', 'text-emerald-700', 'dark:bg-emerald-500/20', 'dark:text-emerald-300'],
+    offline: ['bg-rose-100', 'text-rose-700', 'dark:bg-rose-500/20', 'dark:text-rose-300'],
+    disabled: ['bg-amber-100', 'text-amber-700', 'dark:bg-amber-500/20', 'dark:text-amber-300'],
+};
+
+const normalizeOcrState = (state) => {
+    if (OCR_BADGE_STATES.includes(state)) {
+        return state;
+    }
+
+    return 'offline';
+};
+
+const formatOcrStateLabel = (state) => {
+    if (state === 'online') {
+        return 'ONLINE';
+    }
+
+    if (state === 'disabled') {
+        return 'DESLIGADO';
+    }
+
+    if (state === 'checking') {
+        return 'VERIFICANDO...';
+    }
+
+    return 'OFFLINE';
+};
+
+const formatOcrDetailsLine = (details = {}, { isChecking = false } = {}) => {
+    const parts = [];
+
+    if (details.host) {
+        parts.push(`Host: ${details.host}`);
+    }
+
+    if (typeof details.httpStatus === 'number') {
+        parts.push(`HTTP ${details.httpStatus}`);
+    }
+
+    if (typeof details.latencyMs === 'number') {
+        parts.push(`${details.latencyMs}ms`);
+    }
+
+    if (isChecking) {
+        parts.push('Verificando...');
+    }
+
+    return parts.join(' | ');
+};
+
+const applyOcrBadgeState = (badge, state, details = {}, { isChecking = false } = {}) => {
+    const resolvedState = normalizeOcrState(state);
     const dot = badge.querySelector('[data-ocr-status-dot]');
     const label = badge.querySelector('[data-ocr-status-label]');
 
@@ -204,14 +268,12 @@ const applyOcrBadgeState = (badge, state, details = {}) => {
     badge.classList.add(...OCR_BADGE_CLASS_GROUPS[resolvedState].badge);
     dot?.classList.add(...OCR_BADGE_CLASS_GROUPS[resolvedState].dot);
 
-    const stateLabel = resolvedState === 'online'
-        ? 'ONLINE'
-        : resolvedState === 'disabled'
-            ? 'DESLIGADO'
-            : 'OFFLINE';
+    const stateLabel = formatOcrStateLabel(resolvedState);
 
     if (label) {
-        label.textContent = `OCR ${stateLabel}`;
+        label.textContent = isChecking && resolvedState !== 'checking'
+            ? `OCR ${stateLabel} · verificando...`
+            : `OCR ${stateLabel}`;
     }
 
     const tooltipParts = [`OCR externo: ${stateLabel}`];
@@ -228,6 +290,14 @@ const applyOcrBadgeState = (badge, state, details = {}) => {
         tooltipParts.push(String(details.baseUrl));
     }
 
+    if (details.host) {
+        tooltipParts.push(`Host ${details.host}`);
+    }
+
+    if (isChecking) {
+        tooltipParts.push('Verificando agora...');
+    }
+
     if (details.error) {
         tooltipParts.push(String(details.error));
     }
@@ -237,6 +307,48 @@ const applyOcrBadgeState = (badge, state, details = {}) => {
 
     if (badge._tippy) {
         badge._tippy.setContent(tooltip);
+    }
+};
+
+const applyOcrHealthPanelState = (state, details = {}, { isChecking = false } = {}) => {
+    const panel = document.getElementById('ocrHealthPanel');
+    const badge = document.getElementById('ocrStatusBadge');
+    const baseUrl = document.getElementById('ocrBaseUrl');
+    const detailsLine = document.getElementById('ocrDetails');
+    const errorLine = document.getElementById('ocrError');
+
+    if (!panel || !badge) {
+        return;
+    }
+
+    const resolvedState = normalizeOcrState(state);
+    const allClasses = Object.values(OCR_HEALTH_PANEL_CLASS_GROUPS).flat();
+    badge.classList.remove(...allClasses);
+    badge.classList.add(...OCR_HEALTH_PANEL_CLASS_GROUPS[resolvedState]);
+    badge.classList.toggle('animate-pulse', isChecking);
+
+    const stateLabel = formatOcrStateLabel(resolvedState);
+    badge.textContent = isChecking && resolvedState !== 'checking'
+        ? `${stateLabel} · verificando...`
+        : stateLabel;
+
+    if (baseUrl) {
+        baseUrl.textContent = details.baseUrl || 'URL OCR nao configurada';
+    }
+
+    if (detailsLine) {
+        const formatted = formatOcrDetailsLine(details, { isChecking });
+        detailsLine.textContent = formatted || (isChecking ? 'Verificando OCR...' : 'Sem detalhes de conexao.');
+    }
+
+    if (errorLine) {
+        if (details.error) {
+            errorLine.textContent = String(details.error);
+            errorLine.classList.remove('hidden');
+        } else {
+            errorLine.textContent = '';
+            errorLine.classList.add('hidden');
+        }
     }
 };
 
@@ -295,6 +407,27 @@ const initializeOcrStatusBadge = () => {
     let lastConsoleSignature = '';
     let consecutiveFailures = 0;
     let lastOnlineDetails = null;
+    let lastState = 'checking';
+    let lastDetails = {};
+
+    const syncStatusUi = (state, details = {}, options = {}) => {
+        const resolvedState = normalizeOcrState(state);
+        const normalizedDetails = {
+            httpStatus: details.httpStatus ?? null,
+            latencyMs: details.latencyMs ?? null,
+            baseUrl: details.baseUrl ?? null,
+            host: details.host ?? null,
+            error: details.error ?? null,
+        };
+
+        applyOcrBadgeState(badge, resolvedState, normalizedDetails, options);
+        applyOcrHealthPanelState(resolvedState, normalizedDetails, options);
+
+        if (!options.isChecking) {
+            lastState = resolvedState;
+            lastDetails = normalizedDetails;
+        }
+    };
 
     const logStatusInConsole = (state, details = {}) => {
         if (!shouldLogToConsole || state === 'checking') {
@@ -306,6 +439,7 @@ const initializeOcrStatusBadge = () => {
             httpStatus: details.httpStatus ?? null,
             error: details.error ?? null,
             baseUrl: details.baseUrl ?? null,
+            host: details.host ?? null,
         });
 
         if (signature === lastConsoleSignature) {
@@ -319,6 +453,7 @@ const initializeOcrStatusBadge = () => {
             httpStatus: details.httpStatus ?? null,
             latencyMs: details.latencyMs ?? null,
             baseUrl: details.baseUrl ?? null,
+            host: details.host ?? null,
             error: details.error ?? null,
             checkedAt: new Date().toISOString(),
         };
@@ -339,6 +474,7 @@ const initializeOcrStatusBadge = () => {
         }
 
         statusRequestInFlight = true;
+        syncStatusUi(lastState, lastDetails, { isChecking: true });
         if (fromManualAction) {
             setRefreshButtonLoading(true);
         }
@@ -368,6 +504,7 @@ const initializeOcrStatusBadge = () => {
                 httpStatus: data.http_status ?? null,
                 latencyMs: data.latency_ms ?? null,
                 baseUrl: data.base_url ?? null,
+                host: data.host ?? null,
                 error: data.error ?? null,
             };
 
@@ -375,7 +512,7 @@ const initializeOcrStatusBadge = () => {
             if (state === 'online') {
                 lastOnlineDetails = details;
             }
-            applyOcrBadgeState(badge, state, details);
+            syncStatusUi(state, details);
             logStatusInConsole(state, details);
         } catch (error) {
             consecutiveFailures += 1;
@@ -383,11 +520,13 @@ const initializeOcrStatusBadge = () => {
             if (error instanceof DOMException && error.name === 'AbortError') {
                 const details = {
                     error: `Timeout ao consultar OCR (${requestTimeoutMs}ms).`,
+                    baseUrl: lastDetails.baseUrl ?? null,
+                    host: lastDetails.host ?? null,
                 };
                 if (!fromManualAction && consecutiveFailures < failureThreshold && lastOnlineDetails) {
                     return;
                 }
-                applyOcrBadgeState(badge, 'offline', details);
+                syncStatusUi('offline', details);
                 logStatusInConsole('offline', details);
                 return;
             }
@@ -396,11 +535,13 @@ const initializeOcrStatusBadge = () => {
                 error: error instanceof Error
                     ? error.message
                     : 'Falha ao consultar status OCR.',
+                baseUrl: lastDetails.baseUrl ?? null,
+                host: lastDetails.host ?? null,
             };
             if (!fromManualAction && consecutiveFailures < failureThreshold && lastOnlineDetails) {
                 return;
             }
-            applyOcrBadgeState(badge, 'offline', details);
+            syncStatusUi('offline', details);
             logStatusInConsole('offline', details);
         } finally {
             window.clearTimeout(timeoutId);
@@ -442,9 +583,11 @@ const initializeOcrStatusBadge = () => {
         window.ocrStatusControlBound = true;
     }
 
+    syncStatusUi('checking', {}, { isChecking: true });
+    void fetchStatus();
+
     if (autoPollEnabled) {
         startPolling();
-        void fetchStatus();
     } else {
         stopPolling();
     }
