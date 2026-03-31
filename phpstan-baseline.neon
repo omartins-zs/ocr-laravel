@@ -1,0 +1,451 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$attempts\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/DocumentApiController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$finished_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/DocumentApiController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$job_uuid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/DocumentApiController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$normalized_text\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/DocumentApiController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$raw_text\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/DocumentApiController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stage\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/DocumentApiController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$started_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/DocumentApiController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/DocumentApiController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$version\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/DocumentApiController.php
+
+		-
+			message: '#^Parameter \#2 \$processingJob of static method App\\Support\\PipelineLogger\:\:contextFor\(\) expects App\\Models\\ProcessingJob\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/DocumentApiController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>value" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 6
+			path: app/Http/Controllers/Api/DocumentApiController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\DocumentController\:\:download\(\) should return Symfony\\Component\\HttpFoundation\\BinaryFileResponse but returns Symfony\\Component\\HttpFoundation\\StreamedResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/DocumentController.php
+
+		-
+			message: '#^Parameter \#2 \$processingJob of static method App\\Support\\PipelineLogger\:\:contextFor\(\) expects App\\Models\\ProcessingJob\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/DocumentController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>value" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Http/Controllers/DocumentController.php
+
+		-
+			message: '#^Cannot access property \$value on string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Http/Controllers/DocumentTypeController.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type App\\Models\\DocumentType\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Requests/UpdateDocumentTypeRequest.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentExtractionResource\:\:\$confidence\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentExtractionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentExtractionResource\:\:\$document_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentExtractionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentExtractionResource\:\:\$fields\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentExtractionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentExtractionResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentExtractionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentExtractionResource\:\:\$language\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentExtractionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentExtractionResource\:\:\$needs_review\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentExtractionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentExtractionResource\:\:\$normalized_text\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentExtractionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentExtractionResource\:\:\$raw_text\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentExtractionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentExtractionResource\:\:\$review_notes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentExtractionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentExtractionResource\:\:\$reviewed_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentExtractionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentExtractionResource\:\:\$source_engine\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentExtractionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentExtractionResource\:\:\$version\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentExtractionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$assignee\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$file_size\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$has_native_text\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$mime_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$original_filename\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$overall_confidence\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$processed_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$processing_stage\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$total_pages\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$uploader\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\DocumentResource\:\:\$uuid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>value" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Http/Resources/DocumentResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProcessingLogResource\:\:\$context\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProcessingLogResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProcessingLogResource\:\:\$document_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProcessingLogResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProcessingLogResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProcessingLogResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProcessingLogResource\:\:\$level\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProcessingLogResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProcessingLogResource\:\:\$logged_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProcessingLogResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProcessingLogResource\:\:\$message\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProcessingLogResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProcessingLogResource\:\:\$processing_job_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProcessingLogResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProcessingLogResource\:\:\$stage\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProcessingLogResource.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 4
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>value" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 4
+			path: app/Services/Documents/DocumentIngestionService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$confidence\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/DocumentProcessingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/DocumentProcessingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$source_engine\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/DocumentProcessingService.php
+
+		-
+			message: '#^Parameter \#2 \$extraction of method App\\Services\\Documents\\DocumentProcessingService\:\:persistFields\(\) expects App\\Models\\DocumentExtraction, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Documents/DocumentProcessingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/DocumentWorkflowService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$job_uuid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/DocumentWorkflowService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$queue_name\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Services/Documents/DocumentWorkflowService.php
+
+		-
+			message: '#^Method App\\Services\\Documents\\DocumentWorkflowService\:\:dispatchProcessing\(\) should return App\\Models\\ProcessingJob but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Documents/DocumentWorkflowService.php
+
+		-
+			message: '#^Parameter \#1 \$processingJob of method App\\Services\\Documents\\DocumentWorkflowService\:\:writeProcessingLog\(\) expects App\\Models\\ProcessingJob, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/Documents/DocumentWorkflowService.php
+
+		-
+			message: '#^Parameter \#2 \$processingJob of static method App\\Support\\PipelineLogger\:\:contextFor\(\) expects App\\Models\\ProcessingJob\|null, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Documents/DocumentWorkflowService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$field_schema\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ocr/OcrServiceClient.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ocr/OcrServiceClient.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Feature/DocumentApiTest.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Feature/DocumentWebFlowTest.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Feature/OcrStatusEndpointTest.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Unit/DocumentWorkflowServiceTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/Unit/ExampleTest.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Unit/OcrServiceClientTest.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Unit/ProcessDocumentJobTest.php
