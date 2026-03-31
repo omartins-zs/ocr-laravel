@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Models\Document;
 use App\Policies\DocumentPolicy;
 use App\Support\PipelineLogger;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
@@ -112,13 +111,21 @@ class AppServiceProvider extends ServiceProvider
             return;
         }
 
+        $markerFile = storage_path('framework/cache/service_startup_logged_at');
+        $cooldownSeconds = 600;
+
+        if (is_file($markerFile) && ((time() - (int) filemtime($markerFile)) < $cooldownSeconds)) {
+            return;
+        }
+
         try {
-            $logged = Cache::add('service.startup.logged', true, now()->addMinutes(10));
-            if (! $logged) {
-                return;
+            $markerDir = dirname($markerFile);
+            if (! is_dir($markerDir)) {
+                @mkdir($markerDir, 0775, true);
             }
+            @file_put_contents($markerFile, (string) time());
         } catch (Throwable) {
-            // Se o cache nao estiver disponivel, evita falhar o boot.
+            // Se nao conseguir escrever marcador local, ainda permite o log.
         }
 
         PipelineLogger::info('service.started', [
