@@ -14,7 +14,14 @@
         <a href="{{ route('history') }}" class="btn-secondary w-full sm:w-auto">Voltar</a>
     </section>
 
-    <form method="POST" action="{{ route('documents.store') }}" enctype="multipart/form-data" class="card-surface grid gap-5 p-4 sm:p-6">
+    <form
+        method="POST"
+        action="{{ route('documents.store') }}"
+        enctype="multipart/form-data"
+        class="card-surface grid gap-5 p-4 sm:p-6"
+        x-data="{ uploading: false }"
+        @submit="uploading = true; window.dispatchEvent(new CustomEvent('ocr-status:pause'))"
+        @invalid.capture="uploading = false; window.dispatchEvent(new CustomEvent('ocr-status:resume'))">
         @csrf
 
         <div class="rounded-2xl border border-dashed border-slate-300/80 bg-slate-50/70 p-3 dark:border-slate-700 dark:bg-slate-900/60">
@@ -46,9 +53,9 @@
             </p>
         </div>
 
-        <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end" x-data="{ uploading: false }">
+        <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <a href="{{ route('history') }}" class="btn-secondary w-full sm:w-auto" x-show="!uploading">Cancelar</a>
-            <button type="submit" class="btn-primary w-full sm:w-auto" @click="uploading = true" :disabled="uploading">
+            <button type="submit" class="btn-primary w-full sm:w-auto" :disabled="uploading">
                 <template x-if="!uploading">
                     <div class="flex items-center gap-2">
                         <x-heroicon-o-bolt class="h-4 w-4" />

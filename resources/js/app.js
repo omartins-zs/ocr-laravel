@@ -3,6 +3,8 @@ import Alpine from 'alpinejs';
 import toastr from 'toastr';
 import tippy from 'tippy.js';
 import NProgress from 'nprogress';
+import 'flowbite';
+import 'preline';
 import 'nprogress/nprogress.css';
 
 window.Alpine = Alpine;
@@ -91,6 +93,12 @@ const initializeTooltips = () => {
     });
 };
 
+const initializeUiLibraries = () => {
+    if (window.HSStaticMethods?.autoInit) {
+        window.HSStaticMethods.autoInit();
+    }
+};
+
 const initializeThemeToggle = () => {
     const themeToggleBtn = document.getElementById('theme-toggle');
     const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
@@ -138,60 +146,6 @@ const initializeThemeToggle = () => {
     });
 
     themeToggleBtn.dataset.themeBound = 'true';
-};
-
-const initializeRefreshControls = () => {
-    document.querySelectorAll('[data-refresh-now]').forEach((button) => {
-        if (button.dataset.refreshBound === 'true') {
-            return;
-        }
-
-        button.addEventListener('click', () => {
-            NProgress.start();
-            window.location.reload();
-        });
-
-        button.dataset.refreshBound = 'true';
-    });
-
-    const refreshMarker = document.querySelector('[data-auto-refresh-seconds]');
-    const label = document.querySelector('[data-auto-refresh-label]');
-    const seconds = Number.parseInt(refreshMarker?.dataset.autoRefreshSeconds || '0', 10);
-
-    if (window.ocrRefreshIntervalId) {
-        window.clearInterval(window.ocrRefreshIntervalId);
-        window.ocrRefreshIntervalId = null;
-    }
-
-    if (!refreshMarker || Number.isNaN(seconds) || seconds <= 0) {
-        if (label) {
-            label.textContent = '';
-        }
-
-        return;
-    }
-
-    let remaining = seconds;
-    if (label) {
-        label.textContent = `Atualizacao em ${remaining}s`;
-    }
-
-    window.ocrRefreshIntervalId = window.setInterval(() => {
-        remaining -= 1;
-        if (remaining <= 0) {
-            if (label) {
-                label.textContent = 'Dados podem estar desatualizados. Clique em "Atualizar".';
-                label.classList.add('text-amber-500', 'font-semibold');
-            }
-
-            window.clearInterval(window.ocrRefreshIntervalId);
-            return;
-        }
-
-        if (label) {
-            label.textContent = `Proximo check em ${remaining}s`;
-        }
-    }, 1000);
 };
 
 const OCR_BADGE_CLASS_GROUPS = {
@@ -288,19 +242,37 @@ const applyOcrBadgeState = (badge, state, details = {}) => {
 
 const initializeOcrStatusBadge = () => {
     const badge = document.querySelector('[data-ocr-status-badge]');
+    const refreshButton = document.querySelector('[data-ocr-status-refresh]');
+    const refreshIcon = refreshButton?.querySelector('[data-ocr-status-refresh-icon]');
 
     if (!badge) {
         return;
     }
 
     const endpointUrl = badge.dataset.ocrStatusUrl;
-    const pollMsRaw = Number.parseInt(badge.dataset.ocrStatusPollMs || '10000', 10);
-    const pollMs = Number.isNaN(pollMsRaw) || pollMsRaw <= 0 ? 10000 : pollMsRaw;
+    const pollMsRaw = Number.parseInt(badge.dataset.ocrStatusPollMs || '30000', 10);
+    const pollMs = Number.isNaN(pollMsRaw) || pollMsRaw <= 0 ? 30000 : pollMsRaw;
     const requestTimeoutMsRaw = Number.parseInt(badge.dataset.ocrStatusRequestTimeoutMs || '5000', 10);
     const requestTimeoutMs = Number.isNaN(requestTimeoutMsRaw) || requestTimeoutMsRaw <= 0
         ? 5000
         : requestTimeoutMsRaw;
+    const failureThresholdRaw = Number.parseInt(badge.dataset.ocrStatusFailureThreshold || '2', 10);
+    const failureThreshold = Number.isNaN(failureThresholdRaw) || failureThresholdRaw <= 0
+        ? 1
+        : failureThresholdRaw;
+    const autoPollEnabled = badge.dataset.ocrStatusAutoPoll !== '0';
     const shouldLogToConsole = badge.dataset.ocrStatusConsoleLog === '1';
+    const setRefreshButtonLoading = (isLoading) => {
+        if (!refreshButton) {
+            return;
+        }
+
+        refreshButton.disabled = isLoading;
+        refreshButton.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+        refreshButton.classList.toggle('opacity-70', isLoading);
+        refreshButton.classList.toggle('cursor-not-allowed', isLoading);
+        refreshIcon?.classList.toggle('animate-spin', isLoading);
+    };
 
     if (window.ocrStatusPollIntervalId) {
         window.clearInterval(window.ocrStatusPollIntervalId);
@@ -312,22 +284,26 @@ const initializeOcrStatusBadge = () => {
             error: 'Rota de status OCR nao configurada.',
         };
         applyOcrBadgeState(badge, 'offline', details);
+        if (refreshButton) {
+            refreshButton.disabled = true;
+        }
 
         return;
     }
 
     let statusRequestInFlight = false;
     let lastConsoleSignature = '';
+    let consecutiveFailures = 0;
+    let lastOnlineDetails = null;
 
     const logStatusInConsole = (state, details = {}) => {
-        if (!shouldLogToConsole) {
+        if (!shouldLogToConsole || state === 'checking') {
             return;
         }
 
         const signature = JSON.stringify({
             state,
             httpStatus: details.httpStatus ?? null,
-            latencyMs: details.latencyMs ?? null,
             error: details.error ?? null,
             baseUrl: details.baseUrl ?? null,
         });
@@ -354,12 +330,18 @@ const initializeOcrStatusBadge = () => {
         }
     };
 
-    const fetchStatus = async () => {
+    const fetchStatus = async ({ fromManualAction = false } = {}) => {
         if (statusRequestInFlight) {
+            return;
+        }
+        if (!fromManualAction && document.visibilityState !== 'visible') {
             return;
         }
 
         statusRequestInFlight = true;
+        if (fromManualAction) {
+            setRefreshButtonLoading(true);
+        }
         const controller = new AbortController();
         const timeoutId = window.setTimeout(() => controller.abort(), requestTimeoutMs);
 
@@ -389,13 +371,22 @@ const initializeOcrStatusBadge = () => {
                 error: data.error ?? null,
             };
 
+            consecutiveFailures = 0;
+            if (state === 'online') {
+                lastOnlineDetails = details;
+            }
             applyOcrBadgeState(badge, state, details);
             logStatusInConsole(state, details);
         } catch (error) {
+            consecutiveFailures += 1;
+
             if (error instanceof DOMException && error.name === 'AbortError') {
                 const details = {
                     error: `Timeout ao consultar OCR (${requestTimeoutMs}ms).`,
                 };
+                if (!fromManualAction && consecutiveFailures < failureThreshold && lastOnlineDetails) {
+                    return;
+                }
                 applyOcrBadgeState(badge, 'offline', details);
                 logStatusInConsole('offline', details);
                 return;
@@ -406,23 +397,64 @@ const initializeOcrStatusBadge = () => {
                     ? error.message
                     : 'Falha ao consultar status OCR.',
             };
+            if (!fromManualAction && consecutiveFailures < failureThreshold && lastOnlineDetails) {
+                return;
+            }
             applyOcrBadgeState(badge, 'offline', details);
             logStatusInConsole('offline', details);
         } finally {
             window.clearTimeout(timeoutId);
             statusRequestInFlight = false;
+            if (fromManualAction) {
+                setRefreshButtonLoading(false);
+            }
         }
     };
 
-    fetchStatus();
-    window.ocrStatusPollIntervalId = window.setInterval(fetchStatus, pollMs);
+    if (refreshButton && refreshButton.dataset.ocrStatusRefreshBound !== 'true') {
+        refreshButton.addEventListener('click', () => {
+            void fetchStatus({ fromManualAction: true });
+        });
+        refreshButton.dataset.ocrStatusRefreshBound = 'true';
+    }
+
+    const stopPolling = () => {
+        if (window.ocrStatusPollIntervalId) {
+            window.clearInterval(window.ocrStatusPollIntervalId);
+            window.ocrStatusPollIntervalId = null;
+        }
+    };
+    const startPolling = () => {
+        stopPolling();
+        window.ocrStatusPollIntervalId = window.setInterval(() => {
+            void fetchStatus();
+        }, pollMs);
+    };
+
+    if (window.ocrStatusControlBound !== true) {
+        window.addEventListener('ocr-status:pause', stopPolling);
+        window.addEventListener('ocr-status:resume', () => {
+            void fetchStatus();
+            if (autoPollEnabled) {
+                startPolling();
+            }
+        });
+        window.ocrStatusControlBound = true;
+    }
+
+    if (autoPollEnabled) {
+        startPolling();
+        void fetchStatus();
+    } else {
+        stopPolling();
+    }
 };
 
 window.initUiEnhancements = async () => {
+    initializeUiLibraries();
     initializeTooltips();
     initializeOcrStatusBadge();
     initializeThemeToggle();
-    initializeRefreshControls();
 
     await initializeFilePond();
 };
@@ -447,8 +479,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.info('[OCR SERVICE]', {
                 message: 'Monitor OCR iniciado e escutando status na UI.',
                 endpoint: ocrBadge.dataset.ocrStatusUrl ?? null,
-                pollMs: Number.parseInt(ocrBadge.dataset.ocrStatusPollMs || '10000', 10),
+                pollMs: Number.parseInt(ocrBadge.dataset.ocrStatusPollMs || '30000', 10),
                 requestTimeoutMs: Number.parseInt(ocrBadge.dataset.ocrStatusRequestTimeoutMs || '5000', 10),
+                autoPollEnabled: ocrBadge.dataset.ocrStatusAutoPoll !== '0',
                 checkedAt: new Date().toISOString(),
             });
         }

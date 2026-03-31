@@ -84,38 +84,45 @@
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <span data-auto-refresh-label class="hidden text-xs text-slate-500 dark:text-slate-400 md:inline"></span>
                         <a href="{{ route('upload') }}" class="btn-primary hidden md:inline-flex">
                             <x-heroicon-o-cloud-arrow-up class="h-4 w-4" />
                             Upload rapido
                         </a>
-                        <span
-                            data-ocr-status-badge
-                            data-ocr-status-url="{{ route('ocr.status') }}"
-                            data-ocr-status-poll-ms="{{ (int) config('ocr.status_poll_ms', 10000) }}"
-                            data-ocr-status-request-timeout-ms="{{ (int) config('ocr.status_request_timeout_ms', 5000) }}"
-                            data-ocr-status-console-log="{{ config('app.debug') ? '1' : '0' }}"
-                            class="hidden items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 md:inline-flex"
-                            data-tippy-content="Verificando OCR externo...">
-                            <span data-ocr-status-dot class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
-                            <x-heroicon-o-cpu-chip class="h-3.5 w-3.5" />
-                            <span data-ocr-status-label>OCR verificando...</span>
-                        </span>
+                        <div class="hidden overflow-hidden rounded-full border border-slate-200 bg-slate-50 text-slate-600 transition-colors dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 md:inline-flex">
+                            <span
+                                data-ocr-status-badge
+                                data-ocr-status-url="{{ route('ocr.status') }}"
+                                data-ocr-status-poll-ms="{{ (int) config('ocr.status_poll_ms', 30000) }}"
+                                data-ocr-status-request-timeout-ms="{{ (int) config('ocr.status_request_timeout_ms', 5000) }}"
+                                data-ocr-status-failure-threshold="{{ (int) config('ocr.status_failure_threshold', 2) }}"
+                                data-ocr-status-auto-poll="{{ request()->routeIs('upload') ? '0' : '1' }}"
+                                data-ocr-status-console-log="{{ config('app.debug') ? '1' : '0' }}"
+                                class="inline-flex items-center gap-1 border-r border-slate-200/70 px-2.5 py-1 text-xs font-medium dark:border-slate-700/70"
+                                data-tippy-content="Verificando OCR externo...">
+                                <span data-ocr-status-dot class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+                                <x-heroicon-o-cpu-chip class="h-3.5 w-3.5" />
+                                <span data-ocr-status-label>OCR verificando...</span>
+                            </span>
+                            <button
+                                type="button"
+                                class="inline-flex items-center justify-center px-2.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:text-slate-400 dark:hover:bg-slate-700/60 dark:hover:text-slate-100"
+                                data-ocr-status-refresh
+                                data-tippy-content="Verificar OCR agora"
+                                aria-label="Verificar OCR agora">
+                                <x-heroicon-o-arrow-path class="h-4 w-4" data-ocr-status-refresh-icon />
+                            </button>
+                        </div>
                         <button
                             type="button"
-                            class="btn-secondary"
-                            data-tippy-content="Atualizar agora"
-                            data-refresh-now>
-                            <i class="fa-solid fa-arrows-rotate text-sm"></i>
-                            <span class="hidden sm:inline">Atualizar</span>
-                        </button>
-                        <button
-                            type="button"
-                            class="btn-secondary"
+                            class="rounded-lg p-2.5 text-sm text-slate-500 transition-colors hover:bg-slate-100 focus:ring-4 focus:ring-slate-200 focus:outline-none dark:text-slate-400 dark:hover:bg-slate-700 dark:focus:ring-slate-700"
                             id="theme-toggle"
                             data-tippy-content="Alternar tema">
-                            <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden text-sm"></i>
-                            <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden text-sm"></i>
+                            <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                            </svg>
+                            <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
+                            </svg>
                         </button>
                         <a href="{{ route('profile.edit') }}" class="btn-secondary">
                             <x-heroicon-o-user-circle class="h-4 w-4" />

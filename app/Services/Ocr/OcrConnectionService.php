@@ -91,10 +91,13 @@ class OcrConnectionService
         }
 
         $started = microtime(true);
+        $healthRetries = (int) config('ocr.health_retries', 0);
+        $healthRetrySleepMs = max(0, (int) config('ocr.health_retry_sleep_ms', 250));
 
         try {
             $response = Http::timeout((int) config('ocr.health_timeout', 3))
                 ->connectTimeout((int) config('ocr.health_connect_timeout', 2))
+                ->retry($healthRetries, $healthRetrySleepMs)
                 ->acceptJson()
                 ->get($healthUrl);
 
