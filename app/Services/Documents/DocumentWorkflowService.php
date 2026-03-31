@@ -21,8 +21,7 @@ class DocumentWorkflowService
         User $actor,
         bool $isReprocess = false,
         array $traceContext = [],
-    ): ProcessingJob
-    {
+    ): ProcessingJob {
         $traceContext = $this->sanitizeTraceContext($traceContext);
         $uploadBatchUuid = is_string($traceContext['upload_batch_uuid'] ?? null)
             ? $traceContext['upload_batch_uuid']

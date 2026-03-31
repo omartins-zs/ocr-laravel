@@ -48,13 +48,13 @@ class DocumentController extends Controller
 
         $statusCounters = Document::query()
             ->selectRaw('COUNT(*) as total')
-            ->selectRaw("SUM(CASE WHEN status IN (?, ?, ?) THEN 1 ELSE 0 END) as processing", [
+            ->selectRaw('SUM(CASE WHEN status IN (?, ?, ?) THEN 1 ELSE 0 END) as processing', [
                 DocumentStatus::Uploaded->value,
                 DocumentStatus::Queued->value,
                 DocumentStatus::Processing->value,
             ])
-            ->selectRaw("SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as approved", [DocumentStatus::Approved->value])
-            ->selectRaw("SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as failed", [DocumentStatus::Failed->value])
+            ->selectRaw('SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as approved', [DocumentStatus::Approved->value])
+            ->selectRaw('SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as failed', [DocumentStatus::Failed->value])
             ->first();
 
         $summary = [
