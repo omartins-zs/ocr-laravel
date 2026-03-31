@@ -10,6 +10,40 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (!id.includes('node_modules')) {
+                        return;
+                    }
+
+                    if (id.includes('chart.js')) {
+                        return 'vendor-charts';
+                    }
+
+                    if (
+                        id.includes('filepond')
+                    ) {
+                        return 'vendor-inputs';
+                    }
+
+                    if (
+                        id.includes('toastr')
+                        || id.includes('tippy.js')
+                    ) {
+                        return 'vendor-feedback';
+                    }
+
+                    if (id.includes('alpinejs')) {
+                        return 'vendor-alpine';
+                    }
+
+                    return 'vendor-misc';
+                },
+            },
+        },
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],
