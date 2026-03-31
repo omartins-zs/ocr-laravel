@@ -1,5 +1,6 @@
 <?php
 
+use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -55,7 +56,7 @@ return [
         'stack' => [
             'driver' => 'stack',
             'channels' => explode(',', (string) env('LOG_STACK', 'single')),
-            'ignore_exceptions' => false,
+            'ignore_exceptions' => true,
         ],
 
         'single' => [
@@ -102,6 +103,23 @@ return [
                 'stream' => 'php://stderr',
             ],
             'formatter' => env('LOG_STDERR_FORMATTER'),
+            'processors' => [PsrLogMessageProcessor::class],
+        ],
+
+        'ocr_pipeline' => [
+            'driver' => 'stack',
+            'channels' => explode(',', (string) env('OCR_LOG_STACK', 'stderr,ocr_pipeline_file')),
+            'ignore_exceptions' => false,
+        ],
+
+        'ocr_pipeline_file' => [
+            'driver' => 'monolog',
+            'level' => env('OCR_LOG_LEVEL', 'debug'),
+            'handler' => StreamHandler::class,
+            'handler_with' => [
+                'stream' => env('OCR_LOG_FILE', storage_path('logs/ocr_pipeline.log')),
+            ],
+            'formatter' => JsonFormatter::class,
             'processors' => [PsrLogMessageProcessor::class],
         ],
 
