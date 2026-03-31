@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'America/Sao_Paulo'),
 
     /*
     |--------------------------------------------------------------------------
@@ -122,5 +122,10 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
+    'runtime_fallbacks' => (bool) env('APP_RUNTIME_FALLBACKS', true),
+    'queue_fallback_connection' => env('QUEUE_FALLBACK_CONNECTION', 'database'),
+    'cache_fallback_store' => env('CACHE_FALLBACK_STORE', 'file'),
+    'session_fallback_driver' => env('SESSION_FALLBACK_DRIVER', 'database'),
 
 ];
