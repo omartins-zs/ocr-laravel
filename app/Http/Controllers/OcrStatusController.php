@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\Ocr\OcrConnectionService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class OcrStatusController extends Controller
 {
@@ -11,9 +12,10 @@ class OcrStatusController extends Controller
         private readonly OcrConnectionService $ocrConnectionService,
     ) {}
 
-    public function show(): JsonResponse
+    public function show(Request $request): JsonResponse
     {
-        $snapshot = $this->ocrConnectionService->healthSnapshot();
+        $forceRefresh = $request->boolean('refresh') || $request->boolean('force');
+        $snapshot = $this->ocrConnectionService->healthSnapshot($forceRefresh);
         $state = (string) ($snapshot['status'] ?? 'offline');
 
         if ($state === 'misconfigured') {
@@ -41,7 +43,8 @@ class OcrStatusController extends Controller
                 'health_url' => $snapshot['health_url'] ?? null,
                 'host' => $snapshot['host'] ?? null,
                 'error' => $snapshot['error'] ?? null,
-                'checked_at' => now()->toIso8601String(),
+                'checked_at' => $snapshot['checked_at'] ?? now()->toIso8601String(),
+                'refreshed' => $forceRefresh,
             ],
             'errors' => [],
         ], 200, [

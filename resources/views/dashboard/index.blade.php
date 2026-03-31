@@ -79,15 +79,15 @@
                     default => 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300',
                 };
             @endphp
-            <div id="ocrHealthPanel" class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm dark:border-slate-700 dark:bg-slate-900">
+            <div id="ocrHealthPanel" data-ocr-health-panel class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm dark:border-slate-700 dark:bg-slate-900">
                 <div class="flex items-center justify-between gap-3">
                     <p class="font-semibold text-slate-700 dark:text-slate-200">Servico OCR externo</p>
-                    <span id="ocrStatusBadge" class="rounded-full px-2 py-1 text-xs font-semibold {{ $ocrStatusClasses }}">
+                    <span id="ocrStatusBadge" data-ocr-health-badge class="rounded-full px-2 py-1 text-xs font-semibold {{ $ocrStatusClasses }}">
                         {{ strtoupper($ocrStatus === 'checking' ? 'verificando...' : $ocrStatus) }}
                     </span>
                 </div>
-                <p id="ocrBaseUrl" class="mt-1 font-mono text-xs text-slate-500 dark:text-slate-400">{{ $ocrHealth['base_url'] ?? 'Consultando...' }}</p>
-                <p id="ocrDetails" class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                <p id="ocrBaseUrl" data-ocr-health-base-url class="mt-1 font-mono text-xs text-slate-500 dark:text-slate-400">{{ $ocrHealth['base_url'] ?? 'Consultando...' }}</p>
+                <p id="ocrDetails" data-ocr-health-details class="mt-2 text-xs text-slate-500 dark:text-slate-400">
                     Host: {{ $ocrHealth['host'] ?? '...' }}
                     @if (! is_null($ocrHealth['http_status'] ?? null))
                         | HTTP {{ $ocrHealth['http_status'] }}
@@ -96,7 +96,7 @@
                         | {{ $ocrHealth['latency_ms'] }}ms
                     @endif
                 </p>
-                <p id="ocrError" class="mt-2 text-xs text-rose-600 dark:text-rose-300 {{ empty($ocrHealth['error']) ? 'hidden' : '' }}">{{ $ocrHealth['error'] ?? '' }}</p>
+                <p id="ocrError" data-ocr-health-error class="mt-2 text-xs text-rose-600 dark:text-rose-300 {{ empty($ocrHealth['error']) ? 'hidden' : '' }}">{{ $ocrHealth['error'] ?? '' }}</p>
             </div>
             <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm dark:border-slate-700 dark:bg-slate-900">
                 <p class="font-semibold text-slate-700 dark:text-slate-200">Confianca media OCR</p>

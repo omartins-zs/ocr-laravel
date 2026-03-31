@@ -35,9 +35,9 @@ class OcrConnectionService
     /**
      * @return array<string, mixed>
      */
-    public function healthSnapshot(): array
+    public function healthSnapshot(bool $forceRefresh = false): array
     {
-        if (app()->environment('testing')) {
+        if (app()->environment('testing') || $forceRefresh) {
             return $this->buildHealthSnapshot();
         }
 
@@ -138,6 +138,10 @@ class OcrConnectionService
      */
     private function snapshot(array $snapshot): array
     {
+        if (! array_key_exists('checked_at', $snapshot)) {
+            $snapshot['checked_at'] = now()->toIso8601String();
+        }
+
         $this->logHealthSnapshot($snapshot);
 
         return $snapshot;
