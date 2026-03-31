@@ -156,12 +156,22 @@ class OcrConnectionService
             'base_url' => $snapshot['base_url'] ?? null,
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '');
 
-        $lastSignature = Cache::get('ocr.health.snapshot.last_signature');
+        $lastSignature = null;
+        try {
+            $lastSignature = Cache::get('ocr.health.snapshot.last_signature');
+        } catch (Throwable) {
+            $lastSignature = null;
+        }
+
         if ($lastSignature === $signature) {
             return;
         }
 
-        Cache::put('ocr.health.snapshot.last_signature', $signature, now()->addMinutes(10));
+        try {
+            Cache::put('ocr.health.snapshot.last_signature', $signature, now()->addMinutes(10));
+        } catch (Throwable) {
+            // Sem cache disponivel, apenas segue com o log.
+        }
 
         PipelineLogger::info('ocr.health.snapshot', [
             'service' => 'ocr-service',
